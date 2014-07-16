@@ -90,6 +90,11 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 # Fm
 QCOM_FM_ENABLED := true
 
+# Vendor Init
+TARGET_UNIFIED_DEVICE := true
+TARGET_INIT_VENDOR_LIB := libinit_msm
+TARGET_LIBINIT_DEFINES_FILE := device/sony/nicki/init/init_nicki.c
+
 # Wlan
 BOARD_HAS_QCOM_WLAN              := true
 BOARD_HAS_QCOM_WLAN_SDK          := true
