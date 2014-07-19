@@ -174,6 +174,3 @@ BOARD_SEPOLICY_UNION += \
     system.te \
     ueventd.te \
     wpa_supplicant.te
-
-# Vanir Specifics
-TARGET_ENABLE_PREBUILT_CLANG=y
