@@ -28,6 +28,6 @@ $(call inherit-product, device/sony/nicki/full_nicki.mk)
 PRODUCT_DEVICE := nicki
 PRODUCT_NAME := cm_nicki
 PRODUCT_BRAND := Sony
-PRODUCT_MODEL := C1905
+PRODUCT_MODEL := nicki
 PRODUCT_MANUFACTURER := Sony
 PRODUCT_CHARACTERISTICS := phone

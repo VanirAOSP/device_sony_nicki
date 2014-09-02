@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2014, CyanogenMod. All rights reserved.
+   Copyright (c) 2013, The Linux Foundation. All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -25,75 +25,43 @@
    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
    OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <fcntl.h>
 
 #include "vendor_init.h"
 #include "property_service.h"
 #include "log.h"
 #include "util.h"
 
-#include "init_msm.h"
-
-
-#define HW_MODEL_ID     "/proc/cci_hw_model_name"
-#define BUF_SIZE         64
-static char tmp[BUF_SIZE];
-
-static int read_file2(const char *fname, char *data, int max_size)
+void vendor_load_properties()
 {
-    int fd, rc;
+    char device[PROP_VALUE_MAX];
+    char bbversion[92];
+    FILE *fp;
 
-    if (max_size < 1)
-        return 0;
+    fp = popen("/system/xbin/strings /dev/block/platform/msm_sdcc.1/by-name/modem | /system/bin/grep M8930B-", "r");
+    fgets(bbversion, sizeof(bbversion), fp);
+    pclose(fp);
 
-    fd = open(fname, O_RDONLY);
-    if (fd < 0) {
-        ERROR("failed to open '%s'\n", fname);
-        return 0;
-    }
-
-    rc = read(fd, data, max_size - 1);
-    if ((rc > 0) && (rc < max_size))
-        data[rc] = '\0';
-    else
-        data[0] = '\0';
-    close(fd);
-
-    return 1;
-}
-
-void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *board_type)
-{
-    char platform[PROP_VALUE_MAX];
-    int rc;
-    unsigned long hw_id = -1;
-
-    UNUSED(msm_id);
-    UNUSED(msm_ver);
-    UNUSED(board_type);
-
-    rc = property_get("ro.board.platform", platform);
-    if (!rc || !ISMATCH(platform, ANDROID_TARGET))
-        return;
-
-    /* Obtain model ID */
-    rc = read_file2(HW_MODEL_ID, tmp, sizeof(tmp));
-    if (rc) {
-        hw_id = strtoul(tmp, NULL, 0);
-    }
-
-    /* C1904 */
-    if (hw_id==87) {
-        property_set("ro.product.model", "C1904");
-    }
-
-    /* C1905 otherwise */
-    else {
+    if (strstr(bbversion, "M8930B-AAAATAZM-3.2.25121") ||
+            strstr(bbversion, "M8930B-AAAATAZM-3.2.25126")) { //single sim 4.3 basebands
+        property_set("ro.product.device", "C1905");
         property_set("ro.product.model", "C1905");
-    }
+        property_set("ro.build.description", "C1905-user 4.3 2.22.J.1.18 eng.user.20140509.125022 test-keys");
+        property_set("ro.build.fingerprint", "Sony/C1905/C1905:4.3/15.4.A.1.9/eng.user.20140509.125022:user/release-keys");
+        property_set("persist.radio.multisim.config", "");
+    } else if (strstr(bbversion, "M8930B-AAAATAZM-4.5.21264") ||
+            strstr(bbversion, "M8930B-AAAATAZM-4.5.21266")) { //dual sim 4.3 basebands
+        property_set("ro.product.device", "C2005");
+        property_set("ro.product.model", "C2005");
+        property_set("ro.build.description", "C2005-user 4.3 2.23.J.1.14 eng.user.20140430.172301 test-keys");
+        property_set("ro.build.fingerprint", "Sony/C2005/C2005:4.3/15.5.A.1.5/eng.user.20140430.172301:user/release-keys");
+        property_set("persist.radio.multisim.config", "dsds");
+        property_set("persist.radio.dont_use_dsd", "true");
+    };
 
+    property_get("ro.product.device", device);
+    ERROR("Found %s baseband setting build properties for %s device\n", bbversion, device);
 }
