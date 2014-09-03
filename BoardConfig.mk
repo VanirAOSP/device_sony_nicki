@@ -93,7 +93,7 @@ QCOM_FM_ENABLED := true
 
 # Vendor Init
 TARGET_UNIFIED_DEVICE := true
-TARGET_INIT_VENDOR_LIB := libinit_msm
+TARGET_INIT_VENDOR_LIB := libinit_nicki
 TARGET_LIBINIT_DEFINES_FILE := device/sony/nicki/init/init_nicki.c
 
 # Wlan
@@ -149,10 +149,6 @@ TW_INCLUDE_FUSE_EXFAT := true
 TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 TW_MAX_BRIGHTNESS := 255
 TW_NO_USB_STORAGE := true
-
-TARGET_UNIFIED_DEVICE := true
-TARGET_INIT_VENDOR_LIB := libinit_nicki
-TARGET_LIBINIT_DEFINES_FILE := device/sony/nicki/init/init_nicki.c
 
 # Sepolicy
 BOARD_SEPOLICY_DIRS += \
