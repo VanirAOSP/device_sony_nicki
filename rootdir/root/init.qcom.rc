@@ -59,11 +59,6 @@ on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
 
-service modem-sh /system/bin/sh /system/etc/init.qcom.modem_links.sh
-    class core
-    user root
-    oneshot
-
 on boot
     exec /system/bin/btnvtool -O
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
@@ -467,6 +462,13 @@ service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1
 service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk /storage/usbdisk
     class late_start
     disabled
+
+# create filesystem if necessary
+service setup_fs /system/bin/setup_fs /dev/block/platform/msm_sdcc.1/by-name/userdata
+    class core
+    user root
+    group root
+    oneshot
 
 on property:ro.fuse_sdcard=true
     start sdcard
