@@ -18,6 +18,8 @@ BOARD_EGL_CFG := device/sony/nicki/rootdir/system/lib/egl/egl.cfg
 
 include vendor/sony/nicki/BoardConfigVendor.mk
 
+include device/qcom/sepolicy/sepolicy.mk
+
 # inherit from Sony common
 include device/sony/common/BoardConfigCommon.mk
 
@@ -126,6 +128,9 @@ TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness
 TARGET_UNIFIED_DEVICE := true
 TARGET_INIT_VENDOR_LIB := libinit_nicki
 TARGET_LIBINIT_DEFINES_FILE := device/sony/nicki/init/init_nicki.c
+
+# Enable Minikin text layout engine (will be the default soon)
+USE_MINIKIN := true
 
 # Include an expanded selection of fonts
 EXTENDED_FONT_FOOTPRINT := true
