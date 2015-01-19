@@ -47,7 +47,7 @@ COMMON_GLOBAL_CFLAGS += -D__ARM_USE_PLD -D__ARM_CACHE_LINE_SIZE=64
 TARGET_RELEASE_CPPFLAGS += -DNEEDS_VECTORIMPL_SYMBOLS
 
 # Kernel
-BOARD_KERNEL_CMDLINE := panic=3 console=ttyHSL0,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3
+BOARD_KERNEL_CMDLINE := panic=3 console=ttyHSL0,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1
 BOARD_KERNEL_BASE := 0x80200000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000
@@ -76,8 +76,6 @@ TARGET_DISPLAY_USE_RETIRE_FENCE := true
 # Audio
 BOARD_USES_ALSA_AUDIO := true
 BOARD_USES_LEGACY_ALSA_AUDIO := true
-QCOM_FLUENCE_ENABLED := false
-QCOM_ANC_HEADSET_ENABLED := false
 
 # QC AV Enhancements
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
@@ -142,13 +140,17 @@ BOARD_SEPOLICY_DIRS += \
     device/sony/nicki/sepolicy
 
 BOARD_SEPOLICY_UNION += \
+       device.te \
        file_contexts \
+       property.te \
+       property_contexts \
+       init_shell.te \
        vold.te \
-       netmgrd.te \
        thermal-engine.te \
        rmt_storage.te \
        mpdecision.te \
        mm-qcamerad.te \
        location.te \
        sdcardd.te \
-       system_app.te
+       system_app.te \
+       system_server.te
