@@ -38,6 +38,7 @@ on early-init
 
 on fs
     mount_all fstab.qcom
+    swapon_all fstab.qcom
     setprop ro.crypto.fuse_sdcard true
 
     wait /dev/block/platform/msm_sdcc.1/by-name/persist
@@ -206,6 +207,13 @@ on boot
     chown system system /sys/class/input/input1/writeconfig
 
     chown system system /dev/rmi0
+
+    chown root system /sys/class/timed_output/vibrator/level
+    chown root system /sys/devices/platform/mdp.525057/kcal
+    chmod 0664 /sys/class/timed_output/vibrator/level
+    chmod 0664 /sys/devices/platform/mdp.525057/kcal
+    restorecon /sys/class/timed_output/vibrator/level
+    restorecon /sys/devices/platform/mdp.525057/kcal
 
 on post-fs-data
    mkdir /data/tombstones 0771 system system
